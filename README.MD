@@ -14,7 +14,7 @@ A hipótese central deste estudo é que o desempenho histórico recente e o equi
 O pipeline segue uma lógica de **aprendizado supervisionado multi-saída**: a partir de confrontos históricos (Copa 1950–2022) e eliminatórias 2026, é construído um vetor de 22 features por jogo, que alimenta uma rede neural TensorFlow capaz de prever simultaneamente os gols do time 1 e do time 2. As previsões finais são os placares arredondados para inteiro dos 24 jogos da 1ª rodada da Copa 2026, exportados em JSON.
 
 ## 📐 Arquitetura do Pipeline
-
+---
 Dados Históricos (Copa 1950–2022 + Eliminatórias 2026)
          ↓
   Engenharia de Features
@@ -38,7 +38,7 @@ Dados Históricos (Copa 1950–2022 + Eliminatórias 2026)
   [gols_t1, gols_t2] → Placar inteiro arredondado
          ↓
   bolao_copa_previsoes.json
-
+---
 
 
 ## 2. Dados
