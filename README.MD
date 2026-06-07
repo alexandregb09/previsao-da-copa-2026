@@ -15,7 +15,6 @@ O pipeline segue uma lógica de **aprendizado supervisionado multi-saída**: a p
 
 ## 📐 Arquitetura do Pipeline
 
-```
 Dados Históricos (Copa 1950–2022 + Eliminatórias 2026)
          ↓
   Engenharia de Features
@@ -40,7 +39,7 @@ Dados Históricos (Copa 1950–2022 + Eliminatórias 2026)
          ↓
   bolao_copa_previsoes.json
 
----
+
 
 ## 2. Dados
 
