@@ -1,7 +1,5 @@
 # Relatório — Previsão 1º Rodada Copa do Mundo 2026
 
-### Rede Neural com TensorFlow
-
 
 ## 1\. Introdução
 
