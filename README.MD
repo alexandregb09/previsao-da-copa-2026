@@ -1,4 +1,4 @@
-# Relatório — Previsão de Placares Copa do Mundo 2026
+# Relatório — Previsão 1º Rodada Copa do Mundo 2026
 
 ### Rede Neural com TensorFlow
 
