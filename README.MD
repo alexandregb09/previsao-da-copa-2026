@@ -1,8 +1,7 @@
-# Relatório Técnico — Previsão de Placares Copa do Mundo 2026
+# Relatório — Previsão de Placares Copa do Mundo 2026
 
-### Rede Neural com TensorFlow/Keras · Versão Científica v6 (pós-auditoria)
+### Rede Neural com TensorFlow
 
-\---
 
 ## 1\. Introdução
 
