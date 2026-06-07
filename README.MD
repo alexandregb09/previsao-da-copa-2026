@@ -36,9 +36,9 @@ Dados Históricos (Copa 1950–2022 + Eliminatórias 2026)
   └──────────────────────────────────────┘
          ↓
   Rede Neural Multi-Output + Loss de Poisson
-  \\\[gols\\\_t1, gols\\\_t2] → Placar inteiro arredondado
+  [gols_t1, gols_t2] → Placar inteiro arredondado
          ↓
-  bolao\\\_copa\\\_previsoes.json
+  bolao_copa_previsoes.json
 
 ```
 
@@ -57,7 +57,7 @@ O scraping das eliminatórias é feito via Wikipedia API para seis confederaçõ
 
 ### Variáveis Coletadas
 
-Para cada jogo: time da casa (`home\\\_team`), time visitante (`away\\\_team`), gols do mandante (`gols\\\_home`), gols do visitante (`gols\\\_away`) e ano.
+Para cada jogo: time da casa (`home_team`), time visitante (`away_team`), gols do mandante (`gols_home`), gols do visitante (`gols_away`) e ano.
 
 ### Critérios de Inclusão/Exclusão de Jogos
 
@@ -77,9 +77,9 @@ O vetor de 22 features foi construído seguindo três princípios aplicados a ca
 
 |Feature|Critério de inclusão|
 |-|-|
-|`elo\\\_t1`, `elo\\\_t2`|O Elo captura a força acumulada de cada time ao longo de toda a história de jogos, com base em resultados ponderados por importância da competição e margem de gols. É a melhor proxy disponível de "qualidade geral" sem depender de variáveis não-esportivas. Base na literatura: Elo (1978), Groll et al. (2018).|
-|`diff\\\_elo`|A diferença de Elo é o preditor direto da probabilidade esperada de vitória na fórmula original. Incluí-la separadamente, além dos dois valores absolutos, permite ao modelo usar esse sinal de forma direta, sem precisar aprender a subtração internamente.|
-|`rank\\\_t1`, `rank\\\_t2`|O ranking FIFA usa metodologia distinta do Elo — pontuação por resultados recentes ponderada por importância do jogo e força do adversário. Os dois sistemas não são redundantes: times podem ter Elo alto e ranking médio (histórico longo mas desempenho recente irregular) ou vice-versa.|
+|`elo_t1`, `elo_t2`|O Elo captura a força acumulada de cada time ao longo de toda a história de jogos, com base em resultados ponderados por importância da competição e margem de gols. É a melhor proxy disponível de "qualidade geral" sem depender de variáveis não-esportivas. Base na literatura: Elo (1978), Groll et al. (2018).|
+|`diff_elo`|A diferença de Elo é o preditor direto da probabilidade esperada de vitória na fórmula original. Incluí-la separadamente, além dos dois valores absolutos, permite ao modelo usar esse sinal de forma direta, sem precisar aprender a subtração internamente.|
+|`rank_t1`, `rank_t2`|O ranking FIFA usa metodologia distinta do Elo — pontuação por resultados recentes ponderada por importância do jogo e força do adversário. Os dois sistemas não são redundantes: times podem ter Elo alto e ranking médio (histórico longo mas desempenho recente irregular) ou vice-versa.|
 
 
 
@@ -89,16 +89,16 @@ Todas calculadas sobre os \*\*últimos 10 jogos\*\* de cada time (Copa + elimina
 
 |Feature|Critério de inclusão|
 |-|-|
-|`forma\\\_t1`, `forma\\\_t2`|Aproveitamento em pontos (%). Captura o momentum recente: um time que perdeu 4 dos últimos 10 jogos está em momento diferente de um que ganhou 8, mesmo com Elo parecido. O Elo se move lentamente; a forma reage rapidamente.|
-|`saldo\\\_t1`, `saldo\\\_t2`|Saldo médio de gols (marcados − sofridos por jogo). Complementa a forma: uma equipe pode ter 70% de aproveitamento por goleadas (saldo alto) ou por resultados apertados (saldo baixo) — a diferença importa para a previsão do placar.|
-|`forca\\\_of\\\_t1`, `forca\\\_of\\\_t2`|Média de gols marcados por jogo. Preditor direto da saída do modelo (`gols\\\_t1`, `gols\\\_t2`).|
-|`forca\\\_def\\\_t1`, `forca\\\_def\\\_t2`|Média de gols sofridos por jogo. A força ofensiva de um time interage com a força defensiva do adversário; ambas são necessárias para estimar o placar com independência (inspiração no modelo de Maher, 1982).|
+|`forma_t1`, `forma_t2`|Aproveitamento em pontos (%). Captura o momentum recente: um time que perdeu 4 dos últimos 10 jogos está em momento diferente de um que ganhou 8, mesmo com Elo parecido. O Elo se move lentamente; a forma reage rapidamente.|
+|`saldo_t1`, `saldo_t2`|Saldo médio de gols (marcados − sofridos por jogo). Complementa a forma: uma equipe pode ter 70% de aproveitamento por goleadas (saldo alto) ou por resultados apertados (saldo baixo) — a diferença importa para a previsão do placar.|
+|`forca_of_t1`, `forca_of_t2`|Média de gols marcados por jogo. Preditor direto da saída do modelo (`gols_t1`, `gols_t2`).|
+|`forca_def_t1`, `forca_def_t2`|Média de gols sofridos por jogo. A força ofensiva de um time interage com a força defensiva do adversário; ambas são necessárias para estimar o placar com independência (inspiração no modelo de Maher, 1982).|
 
 #### Grupo 3 — Histórico direto entre os times (features \[13]–\[15])
 
 |Feature|Critério de inclusão|
 |-|-|
-|`h2h\\\_v1`, `h2h\\\_emp`, `h2h\\\_v2`|O confronto direto captura relações que o Elo não captura. Alguns times sistematicamente superam adversários teoricamente mais fortes por fatores táticos, psicológicos ou históricos que se repetem ao longo de gerações. O H2H é o único vetor que guarda esse padrão específico de par de times.|
+|`h2h_v1`, `h2h_emp`, `h2h_v2`|O confronto direto captura relações que o Elo não captura. Alguns times sistematicamente superam adversários teoricamente mais fortes por fatores táticos, psicológicos ou históricos que se repetem ao longo de gerações. O H2H é o único vetor que guarda esse padrão específico de par de times.|
 
 \*\*Limitação reconhecida:\*\* o H2H foi inserido manualmente para os 24 confrontos da Copa 2026. Para pares sem histórico direto suficiente, o default é `(1, 1, 1)` — neutro —, introduzindo imprecisão para seleções que raramente se enfrentam.
 
@@ -106,7 +106,7 @@ Todas calculadas sobre os \*\*últimos 10 jogos\*\* de cada time (Copa + elimina
 
 |Feature|Critério de inclusão|
 |-|-|
-|`prob\\\_v1`, `prob\\\_emp`, `prob\\\_v2`|As odds de casas de apostas agregam informação de dezenas de analistas especializados, incluindo dados privados de elenco, lesões e contexto tático não disponíveis no dataset histórico. Empiricamente, mercados de apostas esportivas são bem calibrados para futebol. As probabilidades são normalizadas pela soma total para remover a margem da casa antes de entrar no modelo.|
+|`prob_v1`, `prob_emp`, `prob_v2`|As odds de casas de apostas agregam informação de dezenas de analistas especializados, incluindo dados privados de elenco, lesões e contexto tático não disponíveis no dataset histórico. Empiricamente, mercados de apostas esportivas são bem calibrados para futebol. As probabilidades são normalizadas pela soma total para remover a margem da casa antes de entrar no modelo.|
 
 
 
@@ -114,8 +114,8 @@ Todas calculadas sobre os \*\*últimos 10 jogos\*\* de cada time (Copa + elimina
 
 |Feature|Critério de inclusão|
 |-|-|
-|`temp\\\_dist\\\_t1`, `temp\\\_dist\\\_t2`|A Copa 2026 será disputada no verão norte-americano em cidades como Miami, Los Angeles e Dallas. Condições de calor e umidade afetam times de climas frios de forma mais pronunciada. A distância da temperatura média anual do país até 14 °C (referência de temperatura ótima para desempenho físico em futebol) é uma proxy desse efeito de adaptação climática.|
-|`host\\\_flag`|Vantagem de jogar em casa é empiricamente comprovada em Copas do Mundo (Brasil 1950, Argentina 1978, França 1998, Alemanha 2006). O flag vale +1 para EUA/CAN/MEX como time 1, −1 se forem time 2, e 0 para confrontos sem sede. No \*\*treino\*\*, esse flag é sempre 0, pois as Copas históricas são disputadas em campo neutro para os visitantes — ele só é ativado na previsão dos 24 jogos de 2026.|
+|`temp_dist_t1`, `temp_dist_t2`|A Copa 2026 será disputada no verão norte-americano em cidades como Miami, Los Angeles e Dallas. Condições de calor e umidade afetam times de climas frios de forma mais pronunciada. A distância da temperatura média anual do país até 14 °C (referência de temperatura ótima para desempenho físico em futebol) é uma proxy desse efeito de adaptação climática.|
+|`host_flag`|Vantagem de jogar em casa é empiricamente comprovada em Copas do Mundo (Brasil 1950, Argentina 1978, França 1998, Alemanha 2006). O flag vale +1 para EUA/CAN/MEX como time 1, −1 se forem time 2, e 0 para confrontos sem sede. No \*\*treino\*\*, esse flag é sempre 0, pois as Copas históricas são disputadas em campo neutro para os visitantes — ele só é ativado na previsão dos 24 jogos de 2026.|
 
 
 
@@ -132,9 +132,9 @@ Todas calculadas sobre os \*\*últimos 10 jogos\*\* de cada time (Copa + elimina
 
 ### Limpeza
 
-* Nomes de países normalizados via dicionário `NOME\\\_COD` com lookup O(1) em minúsculas.
+* Nomes de países normalizados via dicionário `NOME_COD` com lookup O(1) em minúsculas.
 * Registros com código `UNK` são filtrados antes da construção dos datasets.
-* Eliminatórias e histórico de Copas são concatenados com deduplicação por subconjunto `(home\\\_team, away\\\_team, gols\\\_home, gols\\\_away)`.
+* Eliminatórias e histórico de Copas são concatenados com deduplicação por subconjunto `(home_team, away_team, gols_home, gols_away)`.
 
 ### Codificação de Países
 
@@ -144,16 +144,16 @@ Cada país é representado pelo seu código FIFA de 3 letras. Não há embedding
 
 |Índice|Feature|Descrição|
 |-|-|-|
-|0–2|`elo\\\_t1`, `elo\\\_t2`, `diff\\\_elo`|Elo rating individual e diferença|
-|3–4|`rank\\\_t1`, `rank\\\_t2`|Ranking FIFA (menor = melhor)|
-|5–6|`forma\\\_t1`, `forma\\\_t2`|Aproveitamento % nos últimos 10 jogos|
-|7–8|`saldo\\\_t1`, `saldo\\\_t2`|Saldo médio de gols nos últimos 10 jogos|
-|9–10|`forca\\\_of\\\_t1`, `forca\\\_of\\\_t2`|Média de gols marcados nos últimos 10|
-|11–12|`forca\\\_def\\\_t1`, `forca\\\_def\\\_t2`|Média de gols sofridos nos últimos 10|
-|13–15|`h2h\\\_v1`, `h2h\\\_emp`, `h2h\\\_v2`|Head-to-head histórico entre os dois times|
-|16–18|`prob\\\_v1`, `prob\\\_emp`, `prob\\\_v2`|Probabilidades implícitas das odds (normalizadas)|
-|19–20|`temp\\\_dist\\\_t1`, `temp\\\_dist\\\_t2`|Distância da temperatura média do país a 14°C (ideal)|
-|21|`host\\\_flag`|+1 se t1 é sede (EUA/CAN/MEX), −1 se t2 é, 0 se neutro|
+|0–2|`elo_t1`, `elo_t2`, `diff_elo`|Elo rating individual e diferença|
+|3–4|`rank_t1`, `rank_t2`|Ranking FIFA (menor = melhor)|
+|5–6|`forma_t1`, `forma_t2`|Aproveitamento % nos últimos 10 jogos|
+|7–8|`saldo_t1`, `saldo_t2`|Saldo médio de gols nos últimos 10 jogos|
+|9–10|`forca_of_t1`, `forca_of_t2`|Média de gols marcados nos últimos 10|
+|11–12|`forca_def_t1`, `forca_def_t2`|Média de gols sofridos nos últimos 10|
+|13–15|`h2h_v1`, `h2h_emp`, `h2h_v2`|Head-to-head histórico entre os dois times|
+|16–18|`prob_v1`, `prob_emp`, `prob_v2`|Probabilidades implícitas das odds (normalizadas)|
+|19–20|`temp_dist_t1`, `temp_dist_t2`|Distância da temperatura média do país a 14°C (ideal)|
+|21|`host_flag`|+1 se t1 é sede (EUA/CAN/MEX), −1 se t2 é, 0 se neutro|
 
 ### Normalização
 
@@ -183,7 +183,7 @@ Input (22 features)
 ┌──────┴──────┐
 │             │
 Dense(1,softplus)  Dense(1,softplus)
-gols\\\_t1          gols\\\_t2
+gols_t1          gols_t2
 
 ```
 
@@ -195,19 +195,19 @@ A ativação \*\*softplus\*\* na camada de saída garante que a taxa prevista λ
 
 Essa função é a escolha estatisticamente correta para dados de contagem como gols. Ao contrário do MSE, ela penaliza erros de forma assimétrica na escala log — a diferença entre 0 e 1 gol é tratada como mais significativa do que entre 3 e 4 gols, refletindo a realidade de jogos de futebol.
 
-> Referência: Dixon \\\& Coles (1997) — \\\*Modelling Association Football Scores\\\*.
+> Referência: Dixon & Coles (1997) — *Modelling Association Football Scores*.
 
 ### Otimizador e Callbacks
 
-* \*\*Otimizador:\*\* Adam com `learning\\\_rate = 0.001`
-* \*\*EarlyStopping:\*\* monitora `val\\\_loss`, patience = 50, restaura os melhores pesos
-* \*\*ReduceLROnPlateau:\*\* reduz LR à metade se `val\\\_loss` não melhorar por 15 epochs, mínimo `1e-6`
+* \*\*Otimizador:\*\* Adam com `learning_rate = 0.001`
+* \*\*EarlyStopping:\*\* monitora `val_loss`, patience = 50, restaura os melhores pesos
+* \*\*ReduceLROnPlateau:\*\* reduz LR à metade se `val_loss` não melhorar por 15 epochs, mínimo `1e-6`
 * \*\*Epochs máximos:\*\* 400 (interrompido antes pelo EarlyStopping)
 * \*\*Batch size:\*\* 64 (é a escolha padrão da literatura para datasets pequenos)
 
 ### Métricas
 
-* \*\*MAE (Mean Absolute Error):\*\* por saída (`gols\\\_t1\\\_mae`, `gols\\\_t2\\\_mae`) — interpretável em unidade de gols
+* \*\*MAE (Mean Absolute Error):\*\* por saída (`gols_t1_mae`, `gols_t2_mae`) — interpretável em unidade de gols
 * \*\*RMSE:\*\* complementar ao MAE para penalizar erros maiores
 * \*\*Acerto de placar exato:\*\* percentual de jogos com gols arredondados corretos para ambos os times
 
@@ -254,7 +254,7 @@ O modelo é implicitamente comparado com um baseline que sempre prevê placar co
 
 ### Análise dos Resultados Esperados
 
-O modelo tende a refletir o \*\*favoritismo técnico\*\* capturado pelo Elo Rating e pelas odds de apostas: seleções europeias e sul-americanas tradicionais (ARG, BRA, FRA, ENG, ESP, GER, POR) devem aparecer como vencedoras na maioria dos seus confrontos. Jogos envolvendo países-sede (EUA, CAN, MEX) recebem o bônus de `host\\\_flag`, o que pode elevar ligeiramente as previsões de gols ou resultados favoráveis a esses times.
+O modelo tende a refletir o \*\*favoritismo técnico\*\* capturado pelo Elo Rating e pelas odds de apostas: seleções europeias e sul-americanas tradicionais (ARG, BRA, FRA, ENG, ESP, GER, POR) devem aparecer como vencedoras na maioria dos seus confrontos. Jogos envolvendo países-sede (EUA, CAN, MEX) recebem o bônus de `host_flag`, o que pode elevar ligeiramente as previsões de gols ou resultados favoráveis a esses times.
 
 A distribuição típica esperada para a 1ª rodada é de aproximadamente \*\*14–16 vitórias do favorito (T1), 5–8 empates e 2–4 surpresas (vitória do azarão)\*\*, refletindo o nível de desequilíbrio real entre as seleções nessa fase.
 
